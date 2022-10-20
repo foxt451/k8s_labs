@@ -1,31 +1,29 @@
-import React, { FC, useEffect, useState } from "react";
-import { ENV } from "../env";
-import { Task } from "../types/tasks/Task";
+import React, { FC, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../hooks/redux";
+import { loadTasks, TasksStatus } from "../store/slices/task-slice";
+import TaskCard from "./TaskCard";
+import Stack from "react-bootstrap/Stack";
+import { TaskUpdatePayload } from "../types/tasks/Task";
+
+type Inputs = TaskUpdatePayload;
 
 const TaskList: FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const tasks = useAppSelector((state) => state.tasks.tasks);
+  const status = useAppSelector((state) => state.tasks.status);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const loadTasks = async () => {
-      const response = await fetch(`${ENV.apiPrefix}/tasks`);
-      const tasks = (await response.json()) as Task[];
-      setTasks(tasks);
-    };
-    loadTasks();
-  }, []);
+    if (status === TasksStatus.IDLE) {
+      dispatch(loadTasks());
+    }
+  }, [dispatch, status]);
 
   return (
-    <ul>
+    <Stack gap={2}>
       {tasks.map((task) => {
-        return (
-          <li key={task.id}>
-            <>
-              {task.title} due by {task.dueDate} ({task.durationMins} min)
-            </>
-          </li>
-        );
+        return <TaskCard key={task.id} task={task} />;
       })}
-    </ul>
+    </Stack>
   );
 };
 
