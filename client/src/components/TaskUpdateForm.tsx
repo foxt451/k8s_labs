@@ -25,7 +25,7 @@ const TaskUpdateForm = ({
       title: task.title,
       description: task.description,
       durationMins: task.durationMins,
-      dueDate: task.dueDate ?? undefined,
+      dueDate: task.dueDate ?? null,
     },
   });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -36,23 +36,21 @@ const TaskUpdateForm = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Card>
-        {task.dueDate && (
-          <Card.Header>
-            <Form.Group className="my-3">
-              <Controller
-                name="dueDate"
-                control={control}
-                render={({ field }) => (
-                  <DateTimePicker
-                    renderInput={(props) => <TextField {...props} />}
-                    label="Deadline"
-                    {...field}
-                  />
-                )}
-              />
-            </Form.Group>
-          </Card.Header>
-        )}
+        <Card.Header>
+          <Form.Group className="my-3">
+            <Controller
+              name="dueDate"
+              control={control}
+              render={({ field }) => (
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} />}
+                  label="Deadline"
+                  {...field}
+                />
+              )}
+            />
+          </Form.Group>
+        </Card.Header>
         <Card.Body>
           <Card.Title>
             <Form.Group className="mb-3" controlId={`title-${task.id}`}>
