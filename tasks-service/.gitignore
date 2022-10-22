@@ -18,3 +18,4 @@ build
 dist
 
 .env
+secret-map.yml

@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "nodemon src/index.ts",
-    "build:docker": "docker build -t backend ."
+    "build:docker": "docker build -t tasks-service .",
+    "build:docker:migrate": "docker build -t tasks-migrations prisma/migrations"
   },
   "author": "",
   "type": "module",
