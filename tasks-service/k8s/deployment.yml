@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: tasks-service
-          image: tasks-service:latest
-          imagePullPolicy: Never
+          image: foxt451/mcsvc_tasks_service:latest
+          imagePullPolicy: Always
           resources:
             limits:
               memory: "128Mi"
@@ -27,8 +27,8 @@ spec:
                 name: tasks-secret
       initContainers:
         - name: run-migrations-tasks
-          image: tasks-migrations:latest
-          imagePullPolicy: Never
+          image: foxt451/tasks-migrations:latest
+          imagePullPolicy: Always
           command: [
               "migrate",
               "-path",

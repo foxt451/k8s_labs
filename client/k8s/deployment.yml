@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: client
-        imagePullPolicy: Never
-        image: client:latest
+        imagePullPolicy: Always
+        image: foxt451/mcsvc-client:latest
         resources:
           limits:
             memory: "128Mi"
