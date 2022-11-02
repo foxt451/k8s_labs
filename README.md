@@ -7,16 +7,27 @@ Laboratory works for Microservices course
 
 `npm i && npm start`
 
+`cd ../auth-service && migrate -source prisma/migrations -database postgres://localhost:5432/users up`
+
+`npm i && npm start`
+
 `cd ../client && npm i && npm start`
 
 Do not forget to define `.env` files following `.env.example` files in each directory
 
+Also, in `auth-service` generate public and private keys by executing `ts-node src/helpers/generateKeys.ts`. It will produce `public.txt` which is the public key and `private.txt`, a private key. Copy `public.txt` to other services (tasks-service) that need it. The key files should be under `src/helpers/keys`
+
 ## K8S
-Define `secret-map.yml` according to `secret-map.example.yml` files in `tasks-service/k8s` and `tasks-service/k8s/postgres`
+Define `secret-map.yml` and `secret-enckeys-map.yml` according to `*.example.yml` files in `tasks-service/k8s` and `tasks-service/k8s/postgres`
+Same in `auth-service`.
 
 Then, run `.sh` files in root directory:
 
+(optional, the files take registry images currently)
 `source ./docker.sh`
+
+(optional, to push to docker registry)
+`source ./publish.sh`
 
 `source ./k8s.sh`
 

@@ -25,11 +25,16 @@ spec:
           envFrom:
             - secretRef:
                 name: tasks-secret
+          volumeMounts:
+            - mountPath: /app/build/helpers/keys
+              name: tasks-enckeys
+              readOnly: true
       initContainers:
         - name: run-migrations-tasks
           image: foxt451/tasks-migrations:latest
           imagePullPolicy: Always
-          command: [
+          command:
+            [
               "migrate",
               "-path",
               "/migrations",
@@ -40,3 +45,10 @@ spec:
           envFrom:
             - secretRef:
                 name: tasks-secret
+      volumes:
+        - name: tasks-enckeys
+          secret:
+            secretName: tasks-enckeys-secret
+            items:
+              - key: PUBLIC_KEY
+                path: public.txt

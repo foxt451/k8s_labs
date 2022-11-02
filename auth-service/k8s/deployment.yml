@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+        - name: auth-service
+          image: foxt451/mcsvc_auth_service:latest
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: auth-secret
+          volumeMounts:
+            - mountPath: /app/build/helpers/keys
+              name: auth-enckeys
+              readOnly: true
+      initContainers:
+        - name: run-migrations-auth
+          image: foxt451/auth-migrations:latest
+          imagePullPolicy: Always
+          command:
+            [
+              "migrate",
+              "-path",
+              "/migrations",
+              "-database",
+              "$(USER_DB_URL)",
+              "up",
+            ]
+          envFrom:
+            - secretRef:
+                name: auth-secret
+      volumes:
+        - name: auth-enckeys
+          secret:
+            secretName: auth-enckeys-secret
+            items:
+              - key: PUBLIC_KEY
+                path: public.txt
+              - key: PRIVATE_KEY
+                path: private.txt
