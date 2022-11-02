@@ -6,6 +6,7 @@ import {
   getTaskById,
   updateTask,
 } from "../controllers/tasksControllers.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 import { yupBodyMiddleware } from "../middleware/yupBodyMiddleware.js";
 import { taskCreateReqSchema } from "../validation/schemas/taskCreateReqSchema.js";
 import { taskUpdateReqSchema } from "../validation/schemas/taskUpdateReqSchema.js";
@@ -14,12 +15,12 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(getAllTasks)
-  .post(yupBodyMiddleware(taskCreateReqSchema), createTask);
+  .get(authMiddleware, getAllTasks)
+  .post(authMiddleware, yupBodyMiddleware(taskCreateReqSchema), createTask);
 router
   .route("/:id")
-  .get(getTaskById)
-  .patch(yupBodyMiddleware(taskUpdateReqSchema), updateTask)
-  .delete(deleteTask);
+  .get(authMiddleware, getTaskById)
+  .patch(authMiddleware, yupBodyMiddleware(taskUpdateReqSchema), updateTask)
+  .delete(authMiddleware, deleteTask);
 
 export { router as taskRouter };

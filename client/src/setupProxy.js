@@ -11,4 +11,14 @@ module.exports = function (app) {
       },
     })
   );
+  app.use(
+    "/api/auth/v1",
+    createProxyMiddleware({
+      target: "http://localhost:2999",
+      changeOrigin: true,
+      pathRewrite: {
+        "/api/auth/v1": "",
+      },
+    })
+  );
 };

@@ -1,11 +1,11 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { axiosInstance } from "../../axios";
 import { ENV } from "../../env";
 import {
   Task,
   TaskCreatePayload,
   TaskUpdatePayload,
 } from "../../types/tasks/Task";
-import axios from "axios";
 
 export enum TasksStatus {
   IDLE,
@@ -29,7 +29,11 @@ const initialState: TasksState = {
 export const tasksSlice = createSlice({
   name: "tasks",
   initialState,
-  reducers: {},
+  reducers: {
+    setState: (state, { payload }: PayloadAction<TasksStatus>) => {
+      state.status = payload;
+    },
+  },
   extraReducers(builder) {
     builder.addCase(loadTasks.fulfilled, (state, { payload }) => {
       state.error = "";
@@ -51,7 +55,9 @@ export const tasksSlice = createSlice({
 
     builder.addCase(updateTask.fulfilled, (state, { payload }) => {
       if (payload) {
-        state.tasks = state.tasks.map((task) => (task.id === payload.id ? payload : task));
+        state.tasks = state.tasks.map((task) =>
+          task.id === payload.id ? payload : task
+        );
       }
     });
 
@@ -68,14 +74,17 @@ export const tasksSlice = createSlice({
 export const loadTasks = createAsyncThunk<Task[]>(
   "tasks/loadTasks",
   async () => {
-    return (await axios<Task[]>(`${ENV.tasksApiPrefix}/tasks`)).data;
+    return (await axiosInstance<Task[]>(`${ENV.tasksApiPrefix}/tasks`)).data;
   }
 );
 
 export const createTask = createAsyncThunk<Task, TaskCreatePayload>(
   "tasks/createTask",
   async (newTask) => {
-    const resp = await axios.post<Task>(`${ENV.tasksApiPrefix}/tasks`, newTask);
+    const resp = await axiosInstance.post<Task>(
+      `${ENV.tasksApiPrefix}/tasks`,
+      newTask
+    );
     return resp.data;
   }
 );
@@ -84,7 +93,7 @@ export const updateTask = createAsyncThunk<
   Task | null,
   { id: string; payload: TaskUpdatePayload }
 >("tasks/updateTask", async ({ id, payload }) => {
-  const resp = await axios.patch<Task>(
+  const resp = await axiosInstance.patch<Task>(
     `${ENV.tasksApiPrefix}/tasks/${id}`,
     payload
   );
@@ -94,15 +103,16 @@ export const updateTask = createAsyncThunk<
 export const completeTask = createAsyncThunk<void, string>(
   "tasks/completeTask",
   async (taskId) => {
-    await axios.delete(`${ENV.tasksApiPrefix}/tasks/${taskId}`);
+    await axiosInstance.delete(`${ENV.tasksApiPrefix}/tasks/${taskId}`);
   }
 );
 
 export const deleteTask = createAsyncThunk<void, string>(
   "tasks/deleteTask",
   async (taskId) => {
-    await axios.delete(`${ENV.tasksApiPrefix}/tasks/${taskId}`);
+    await axiosInstance.delete(`${ENV.tasksApiPrefix}/tasks/${taskId}`);
   }
 );
 
 export const tasksReducer = tasksSlice.reducer;
+export const { setState: setTasksState } = tasksSlice.actions;
