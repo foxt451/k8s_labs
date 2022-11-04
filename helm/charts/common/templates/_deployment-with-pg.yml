@@ -1,19 +1,21 @@
 {{- define "common.deployment-with-pg.init.tpl" -}}
 spec:
-  {{- if .Values.migrations }}
-  initContainers:
-    - name: {{ .Values.migrations.image.name }}
-      image: {{ .Values.migrations.image.name }}:{{ .Values.migrations.image.tag }}
-      imagePullPolicy: {{ default "Always" .Values.migrations.image.pullPolicy }}
-      command: [ "migrate", "-path", "/migrations", "-database",  "$({{ .Values.migrations.dbEnvName }})", "up" ]
-      envFrom:
-        - configMapRef:
-            optional: true
-            name: {{ include "common.fullname" $ }}-config
-        - secretRef:
-            optional: true
-            name: {{ include "common.fullname" $ }}-secret
-  {{- end }}
+  template:
+    spec:
+      {{- if .Values.migrations }}
+      initContainers:
+        - name: {{ include "common.fullname" $ }}-migrations
+          image: {{ .Values.migrations.image.name }}:{{ .Values.migrations.image.tag }}
+          imagePullPolicy: {{ default "Always" .Values.migrations.image.pullPolicy }}
+          command: [ "migrate", "-path", "/migrations", "-database",  "$({{ .Values.migrations.dbEnvName }})", "up" ]
+          envFrom:
+            - configMapRef:
+                optional: true
+                name: {{ include "common.fullname" $ }}-config
+            - secretRef:
+                optional: true
+                name: {{ include "common.fullname" $ }}-secret
+      {{- end }}
 {{- end -}}
 
 {{- define "common.deployment-with-pg.tpl" -}}

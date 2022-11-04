@@ -6,8 +6,10 @@ metadata:
   name: {{ include "common.fullname" . }}-config
 data:
   {{- range $key, $value := .Values.config.data }}
-    {{ $key }}: {{ $value }}
+    {{ $key }}: |-
+{{ $value | indent 6 }}
   {{- end }}
+{{- end -}}
 
 {{- define "common.configmap" -}}
 {{- include "common.util.merge" (append . "common.configmap.tpl") -}}

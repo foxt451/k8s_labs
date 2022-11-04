@@ -1,1 +1,1 @@
-{{- include "common.deployment-with-pg" . -}}
+{{- include "common.deployment-with-pg.tpl" . -}}
