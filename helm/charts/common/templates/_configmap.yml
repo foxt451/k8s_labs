@@ -1,0 +1,14 @@
+
+{{- define "common.configmap.tpl" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.fullname" . }}-config
+data:
+  {{- range $key, $value := .Values.config.data }}
+    {{ $key }}: {{ $value }}
+  {{- end }}
+
+{{- define "common.configmap" -}}
+{{- include "common.util.merge" (append . "common.configmap.tpl") -}}
+{{- end -}}

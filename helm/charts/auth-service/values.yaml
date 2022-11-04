@@ -1,0 +1,53 @@
+# Default values for auth-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+postgresql:
+  fullnameOverride: postgres-auth
+  auth:
+    database: "users"
+    username: "USER"
+    password: "PASS"
+
+image:
+  name: foxt451/mcsvc_auth_service
+  tag: latest
+
+migrations:
+  image:
+    name: foxt451/auth-migrations
+    tag: latest
+  dbEnvName: "USER_DB_URL"
+
+service:
+  ports:
+    - name: app
+      port: 3000
+      containerPort: 3000
+
+ingress:
+  path: "/api/auth/v1(/|$)(.*)"
+  port: app
+  pathRewrite: "/$2"
+
+secret:
+  stringData:
+    USER_DB_URL: "postgresql://USER:PASS@postgres-auth:5432/users?sslmode=disable"
+  PUBLIC_KEY: |
+    -----BEGIN PUBLIC KEY-----
+    MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBsMLYcPI7LpJvUt34Jl83aGH18lN
+    Y0AkCUm4AqovpMcFHOYD9+od7/lorsCUB7R+dHsIu8VD+3s5P5r0DZSJ3w==
+    -----END PUBLIC KEY-----
+  PRIVATE_KEY: |
+    -----BEGIN PRIVATE KEY-----
+    MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg626w6CfUxVcioi1X
+    vXr5Y7hUPSmsunljsP7QcP6d+AOhRANCAAQGwwthw8jsukm9S3fgmXzdoYfXyU1j
+    QCQJSbgCqi+kxwUc5gP36h3v+WiuwJQHtH50ewi7xUP7ezk/mvQNlInf
+    -----END PRIVATE KEY-----
+
+secretMounts:
+  mountPath: /app/build/helpers/keys
+  paths:
+    PUBLIC_KEY: public.txt
+    PRIVATE_KEY: private.txt
+
