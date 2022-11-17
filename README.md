@@ -36,6 +36,14 @@ Note, that the first line of the second script will delete all deployments. This
 Finally, open your `http://$(minikube_ip)/` to see the webpage.
 `http://$(minikube_ip)/api/tasks/v1/tasks` is the path to the "tasks" REST resource. Apart from GET all, it has endpoints to GET one, POST, PATCH and DELETE.
 
+## Helm
+
+The charts are conveniently installed by executing in `helm` directory:
+
+`helm install todos .`
+
+Custom values might be supplied through helm CLI flags.
+
 # Docker hub images
 Client: https://hub.docker.com/repository/docker/foxt451/mcsvc-client
 
