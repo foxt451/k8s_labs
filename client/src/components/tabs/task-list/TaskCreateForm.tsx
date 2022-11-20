@@ -1,10 +1,10 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { TaskCreatePayload } from "../types/tasks/Task";
+import { TaskCreatePayload } from "../../../types/tasks/Task";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { useAppDispatch } from "../hooks/redux";
-import { createTask } from "../store/slices/task-slice";
+import { useAppDispatch } from "../../../hooks/redux";
+import { createTask } from "../../../store/slices/task-slice";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import TextField from "@mui/material/TextField";
 

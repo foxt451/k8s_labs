@@ -14,6 +14,8 @@ postgresql:
 container:
   name: tasks
 
+replicaCount: 2
+
 image:
   name: foxt451/mcsvc_tasks_service
   tag: latest

@@ -1,0 +1,18 @@
+{{- define "common.virtual-service.tpl" -}}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ include "common.fullname" . }}
+spec:
+  hosts:
+    - {{ include "common.fullname" . }}
+  http:
+    - route:
+        - destination:
+            host: {{ include "common.fullname" . }}
+      timeout: {{ (.Values.virtualService).timeout | default "5s" }}
+      retries:
+        attempts: {{ (.Values.virtualService).attempts | default 3 }}
+        retryOn: 5xx
+        perTryTimeout: {{ (.Values.virtualService).perTryTimeout | default "5s" }}
+{{- end -}}

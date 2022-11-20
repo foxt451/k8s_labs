@@ -1,10 +1,10 @@
 import React, { FC, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import {
   loadTasks,
   setTasksState,
   TasksStatus,
-} from "../store/slices/task-slice";
+} from "../../../store/slices/task-slice";
 import TaskCard from "./TaskCard";
 import Stack from "react-bootstrap/Stack";
 

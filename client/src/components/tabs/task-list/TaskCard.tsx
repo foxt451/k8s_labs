@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Task } from "../types/tasks/Task";
+import { Task } from "../../../types/tasks/Task";
 import TaskDisplayCard from "./TaskDisplayCard";
 import TaskUpdateForm from "./TaskUpdateForm";
 

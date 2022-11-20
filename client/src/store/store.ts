@@ -13,6 +13,7 @@ import {
   REHYDRATE,
 } from "redux-persist";
 import { injectStore } from "../axios";
+import { scheduleReducer } from "./slices/schedule-slice";
 
 const persistConfig = {
   key: "root",
@@ -23,6 +24,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   tasks: tasksReducer,
   auth: authReducer,
+  schedule: scheduleReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -2,11 +2,11 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import { Task, TaskUpdatePayload } from "../types/tasks/Task";
+import { Task, TaskUpdatePayload } from "../../../types/tasks/Task";
 import Form from "react-bootstrap/Form";
-import { useAppDispatch } from "../hooks/redux";
+import { useAppDispatch } from "../../../hooks/redux";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { updateTask } from "../store/slices/task-slice";
+import { updateTask } from "../../../store/slices/task-slice";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import TextField from "@mui/material/TextField";
 

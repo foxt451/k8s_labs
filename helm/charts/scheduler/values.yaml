@@ -1,0 +1,25 @@
+# Default values for tasks-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+container:
+  name: scheduler-service
+
+image:
+  name: foxt451/mcsvc_scheduler_service
+  tag: latest
+
+service:
+  ports:
+    - name: app
+      port: 3000
+      containerPort: 3000
+
+ingress:
+  path: "/api/scheduler/v1(/|$)(.*)"
+  port: app
+  pathRewrite: "/$2"
+
+config:
+  data:
+    TASKS_API_BASE_URL: "http://todos-tasks-service:3000"

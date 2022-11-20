@@ -2,10 +2,10 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import { Task } from "../types/tasks/Task";
+import { Task } from "../../../types/tasks/Task";
 import Form from "react-bootstrap/Form";
-import { useAppDispatch } from "../hooks/redux";
-import { completeTask, deleteTask } from "../store/slices/task-slice";
+import { useAppDispatch } from "../../../hooks/redux";
+import { completeTask, deleteTask } from "../../../store/slices/task-slice";
 
 const TaskDisplayCard = ({
   task,

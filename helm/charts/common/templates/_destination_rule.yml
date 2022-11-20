@@ -1,0 +1,14 @@
+{{- define "common.destination-rule.tpl" -}}
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: {{ include "common.fullname" . }}
+spec:
+  host: {{ include "common.fullname" . }}
+  trafficPolicy:
+    outlierDetection:
+      consecutive5xxErrors: {{ ((.Values.destinationRules).outlierDetection).consecutive5xxErrors | default 5 }}
+      interval: {{ ((.Values.destinationRules).outlierDetection).interval | default "10s" }}
+      baseEjectionTime: {{ ((.Values.destinationRules).outlierDetection).baseEjectionTime | default "30s" }}
+      maxEjectionPercent: {{ ((.Values.destinationRules).outlierDetection).maxEjectionPercent | default 80 }}
+{{- end -}} 

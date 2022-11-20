@@ -21,4 +21,14 @@ module.exports = function (app) {
       },
     })
   );
+  app.use(
+    "/api/scheduler/v1",
+    createProxyMiddleware({
+      target: "http://localhost:7682",
+      changeOrigin: true,
+      pathRewrite: {
+        "/api/scheduler/v1": "",
+      },
+    })
+  );
 };
