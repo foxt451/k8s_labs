@@ -4,6 +4,8 @@ import * as Joi from 'joi';
 
 export enum TasksApiEndpoint {
   GET_ALL,
+  TEST_INIT_DELAY,
+  TEST_TEST_DELAY,
 }
 
 interface TasksApiConfig {
@@ -18,6 +20,8 @@ const tasksApiConfiguration = registerAs(
     baseUrl: process.env.TASKS_API_BASE_URL || 'http://tasks-service',
     endpoints: {
       [TasksApiEndpoint.GET_ALL]: '/tasks',
+      [TasksApiEndpoint.TEST_INIT_DELAY]: '/test/initDelay',
+      [TasksApiEndpoint.TEST_TEST_DELAY]: '/test/testDelay',
     },
     mock: process.env.TASKS_API_MOCK === 'true',
   }),

@@ -10,9 +10,9 @@ spec:
     - route:
         - destination:
             host: {{ include "common.fullname" . }}
-      timeout: {{ (.Values.virtualService).timeout | default "5s" }}
+      timeout: {{ (.Values.virtualService).timeout | default "10s" }}
       retries:
         attempts: {{ (.Values.virtualService).attempts | default 3 }}
         retryOn: 5xx
-        perTryTimeout: {{ (.Values.virtualService).perTryTimeout | default "5s" }}
+        perTryTimeout: {{ (.Values.virtualService).perTryTimeout | default "3s" }}
 {{- end -}}

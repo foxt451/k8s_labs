@@ -4,6 +4,7 @@ import tasksApiConfiguration, {
   tasksApiSchema,
 } from './config/tasksApi.config';
 import { SchedulerModule } from './scheduler/scheduler.module';
+import { TestModule } from './test/test.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { SchedulerModule } from './scheduler/scheduler.module';
       validationSchema: tasksApiSchema,
     }),
     SchedulerModule,
+    TestModule,
   ],
   controllers: [],
 })

@@ -1,6 +1,8 @@
 import express, { Request } from "express";
 import { taskRouter } from "./routes/taskRoutes.js";
 import morgan from "morgan";
+import { testDelay } from "./controllers/testControllers.js";
+import { testRouter } from "./routes/testRoutes.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,6 +14,7 @@ app.use(
   )
 );
 app.use("/tasks", taskRouter);
+app.use("/test", testRouter);
 
 const main = () => {
   app.listen(port, () => {

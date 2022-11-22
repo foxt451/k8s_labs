@@ -67,3 +67,29 @@ The second way may be improved by adding steps to delete dev deps, source and ot
 
 # Preview
 ![preview](https://i.imgur.com/wwQqQel.png)
+
+# Istio
+
+Scheduler service communicates with Tasks service. Scheduler service has an endpoint `/test/tasks` to make 100 concurrent requests to an endpoint at Tasks service (`test/testDelay`) and measure average time. It also has `test/tasksDelay` endpoint that will hit an endpoint at Tasks service (`test/initDelay`) and introduce 10sec delay in that tasks-service pod for future `test/testDelay` requests.
+
+1) After hitting `/api/scheduler/v1/test/tasks`, no istio enabled:
+
+`0.1403` seconds
+
+2) After hitting delay endpoint:
+
+`4.66213` seconds
+
+2) After installing istio with retries, no delay:
+
+`0.11193` seconds
+
+3) After introducing delay:
+
+`1.9281` seconds
+
+4) After enabling circuit-breaker:
+
+first time: `2.06804` seconds
+
+second time: `0.07339` seconds
