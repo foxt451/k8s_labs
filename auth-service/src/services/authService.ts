@@ -3,6 +3,7 @@ import prisma from "../data/prisma.js";
 import { compareHash } from "../helpers/compareHash.js";
 import { hash } from "../helpers/hash.js";
 import { TrimmedUser, trimUser } from "../helpers/trimUser.js";
+import { GetProfileInfoPayload } from "../types/GetProfileInfoPayload.js";
 import { RefreshTokenPayload } from "../types/RefreshTokenPayload.js";
 import { SignInPayload } from "../types/SignInPayload.js";
 import { SignUpPayload } from "../types/SignUpPayload.js";
@@ -33,6 +34,20 @@ class AuthService {
     return trimUser(user);
   }
 
+  async getProfile(
+    getProfilePayload: GetProfileInfoPayload
+  ): Promise<TrimmedUser | null> {
+    const user = await prisma.userAccount.findFirst({
+      where: {
+        id: getProfilePayload.id,
+      },
+    });
+    if (!user) {
+      return null;
+    }
+    return trimUser(user);
+  }
+
   async generateRefreshToken(userId: string): Promise<
     RefreshToken & {
       user: UserAccount;
@@ -40,9 +55,9 @@ class AuthService {
   > {
     await prisma.refreshToken.deleteMany({
       where: {
-        userAccountId: userId
-      }
-    })
+        userAccountId: userId,
+      },
+    });
     const token = await prisma.refreshToken.create({
       data: {
         userAccountId: userId,
