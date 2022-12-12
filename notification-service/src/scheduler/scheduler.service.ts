@@ -11,6 +11,11 @@ export enum SCHEDULE_TYPE {
   ONCE,
 }
 
+type ExtendedJobData<T> = {
+  cancellationKey: string;
+  data: T;
+};
+
 @Injectable()
 export class SchedulerService implements OnModuleInit {
   private mongoURl: string;
@@ -29,7 +34,9 @@ export class SchedulerService implements OnModuleInit {
     action: (jobData: T) => Promise<void>,
     name: SCHEDULE_NAME,
   ) {
-    this.agenda.define<T>(name, (job) => action(job.attrs.data));
+    this.agenda.define<ExtendedJobData<T>>(name, (job) =>
+      action(job.attrs.data.data),
+    );
   }
 
   public async onModuleInit() {
@@ -41,9 +48,29 @@ export class SchedulerService implements OnModuleInit {
     args: Data,
     interval: string | Date,
     scheduleType: SCHEDULE_TYPE,
+    cancellationKey = 'default',
   ) {
     if (scheduleType === SCHEDULE_TYPE.ONCE) {
-      this.agenda.schedule<Data>(interval, task, args);
+      await this.agenda.schedule<ExtendedJobData<Data>>(interval, task, {
+        data: args,
+        cancellationKey,
+      });
     }
+  }
+
+  public async cancelTask<T extends SCHEDULE_NAME>(
+    name: T,
+    cancellationKey: string | null,
+  ) {
+    await this.agenda.cancel({
+      name,
+      ...(cancellationKey !== null
+        ? {
+            data: {
+              cancellationKey,
+            },
+          }
+        : {}),
+    });
   }
 }

@@ -10,7 +10,7 @@ import {
   SCHEDULE_TYPE,
 } from 'src/scheduler/scheduler.service';
 import { SendEventPayload } from 'src/types/sender/SendEventPayload';
-import { TaskTopicItem } from 'src/types/tasks/TaskTopicItem';
+import { TaskOp, TaskTopicItem } from 'src/types/tasks/TaskTopicItem';
 
 @Injectable()
 export class TaskNotificationsService {
@@ -42,8 +42,24 @@ export class TaskNotificationsService {
   }
 
   public async scheduleDeadlineNotification(payload: TaskTopicItem) {
+    if (payload.op === TaskOp.DELETED || payload.op === TaskOp.UPDATED) {
+      this.logger.log(
+        `Cancelling previous deadline email for task with id: ${payload.task.id}`,
+      );
+      await this.scheduler.cancelTask(
+        SCHEDULE_NAME.DEADLINE_NOTIFICATION,
+        `task_${payload.task.id}`,
+      );
+    }
     this.logger.log(
       `Scheduling a deadline email for task with id: ${payload.task.id}`,
+    );
+    const sendAt = new Date(
+      new Date(payload.task.dueDate).getTime() -
+        this.DEADLINE_NOTIFICATION_OFFSET_SEC * 1000,
+    );
+    this.logger.log(
+      `The deadline email for task with id: ${payload.task.id} will be sent at: ${sendAt}`,
     );
     await this.scheduler.scheduleTask<
       SCHEDULE_NAME.DEADLINE_NOTIFICATION,
@@ -51,11 +67,9 @@ export class TaskNotificationsService {
     >(
       SCHEDULE_NAME.DEADLINE_NOTIFICATION,
       payload,
-      new Date(
-        new Date(payload.task.dueDate).getTime() -
-          this.DEADLINE_NOTIFICATION_OFFSET_SEC * 1000,
-      ),
+      sendAt,
       SCHEDULE_TYPE.ONCE,
+      `task_${payload.task.id}`,
     );
   }
 }
