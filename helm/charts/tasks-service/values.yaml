@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 postgresql:
-  fullnameOverride: postgres-tasks
+  nameOverride: postgres-tasks
   postgresqlDatabase: "tasks"
   postgresqlUsername: "demo"
   postgresqlPassword: "demo"
@@ -39,7 +39,7 @@ ingress:
 
 secret:
   stringData:
-    TASK_DB_URL: "postgresql://demo:demo@postgres-tasks:5432/tasks?sslmode=disable"
+    TASK_DB_URL: "postgresql://demo:demo@todos-postgres-tasks:5432/tasks?sslmode=disable"
     PUBLIC_KEY: |
       -----BEGIN PUBLIC KEY-----
       MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBsMLYcPI7LpJvUt34Jl83aGH18lN
@@ -50,3 +50,7 @@ secretMounts:
   mountPath: /app/build/helpers/keys
   paths:
     PUBLIC_KEY: public.txt
+
+config:
+  data:
+    BROKER_URL: "kafka:9092"

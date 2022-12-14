@@ -1,9 +1,12 @@
 import prisma from "../data/prisma.js";
+import { taskToTopicItem } from "../helpers/taskToTopicItem.js";
 import {
   Task,
   TaskCreatePayload,
   TaskUpdatePayload,
 } from "../types/tasks/Task.js";
+import { TaskOp } from "../types/tasks/TaskTopicItem.js";
+import { brokerService } from "./brokerService.js";
 
 class TaskCrudService {
   async getAll(userId: string): Promise<Task[]> {
@@ -29,18 +32,28 @@ class TaskCrudService {
       if (!task) {
         return task;
       }
-      return await prisma.task.delete({
+      const deletedTask = await prisma.task.delete({
         where: {
           id,
         },
       });
+      await brokerService.emitTaskUpdate({
+        op: TaskOp.DELETED,
+        task: taskToTopicItem(deletedTask),
+      });
+      return deletedTask;
     } catch {
       return null;
     }
   }
 
   async createOne(task: TaskCreatePayload, userId: string): Promise<Task> {
-    return prisma.task.create({ data: { ...task, userId } });
+    const createdTask = await prisma.task.create({ data: { ...task, userId } });
+    await brokerService.emitTaskUpdate({
+      op: TaskOp.CREATED,
+      task: taskToTopicItem(createdTask),
+    });
+    return createdTask;
   }
 
   async updateOne(
@@ -58,12 +71,17 @@ class TaskCrudService {
       if (!task) {
         return task;
       }
-      return await prisma.task.update({
+      const updatedTask = await prisma.task.update({
         data: payload,
         where: {
           id,
         },
       });
+      await brokerService.emitTaskUpdate({
+        op: TaskOp.UPDATED,
+        task: taskToTopicItem(updatedTask),
+      });
+      return updatedTask;
     } catch {
       return null;
     }

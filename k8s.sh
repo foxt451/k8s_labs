@@ -5,3 +5,5 @@ kubectl apply -f ./tasks-service/k8s
 kubectl apply -f ./auth-service/k8s/postgres
 kubectl apply -f ./auth-service/k8s
 kubectl apply -f ./scheduler/k8s
+kubectl apply -f ./notification-service/k8s
+kubectl apply -f ./email-service/k8s

@@ -45,6 +45,8 @@ spec:
           envFrom:
             - secretRef:
                 name: tasks-secret
+            - configMapRef:
+                name: tasks-config
       volumes:
         - name: tasks-enckeys
           secret:

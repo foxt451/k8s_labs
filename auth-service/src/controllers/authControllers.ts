@@ -4,6 +4,7 @@ import { signAccessToken } from "../helpers/jwt.js";
 import { trimUser } from "../helpers/trimUser.js";
 import { authService } from "../services/authService.js";
 import { AuthenticatedRequest } from "../types/AuthenticatedRequest.js";
+import { GetProfileInfoPayload } from "../types/GetProfileInfoPayload.js";
 import { RefreshTokenPayload } from "../types/RefreshTokenPayload.js";
 import { SignInPayload } from "../types/SignInPayload.js";
 import { SignUpPayload } from "../types/SignUpPayload.js";
@@ -32,6 +33,19 @@ export const signUp = async (
     }
     throw e;
   }
+};
+
+export const getProfileInfo = async (req: Request, res: Response) => {
+  const user = await authService.getProfile({
+    id: req.params.id,
+  });
+  if (!user) {
+    return res.status(404).json({
+      type: "Not found",
+      message: "User with such id was not found",
+    });
+  }
+  res.json(user);
 };
 
 export const signIn = async (
@@ -69,10 +83,7 @@ export const refreshTokens = async (
   });
 };
 
-export const logout = async (
-  req: Request,
-  res: Response
-) => {
+export const logout = async (req: Request, res: Response) => {
   await authService.logout((req as AuthenticatedRequest).user.id);
   res.status(200).send();
 };

@@ -1,0 +1,27 @@
+# Default values for tasks-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+container:
+  name: notification-service
+
+image:
+  name: foxt451/mcsvc_notification_service
+  tag: latest
+
+service:
+  ports:
+    - name: app
+      port: 3000
+      containerPort: 3000
+
+config:
+  data:
+    BROKER_URL: kafka:9092
+    EMAIL_QUEUE_TOPIC: email-queue
+    AUTH_SVC_URL: http://todos-auth-service:3000
+    TASK_QUEUE_TOPIC: task-updates
+
+secret:
+  stringData:
+    JOB_QUEUE_DB_URL: "mongodb+srv://linds:7uKeH7pPjCPDZH7j@cluster0.j0wyb.mongodb.net/?retryWrites=true&w=majority"

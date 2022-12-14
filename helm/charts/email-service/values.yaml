@@ -1,0 +1,29 @@
+# Default values for tasks-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+container:
+  name: email-service
+
+image:
+  name: foxt451/mcsvc_email_service
+  tag: latest
+
+service:
+  ports:
+    - name: app
+      port: 3000
+      containerPort: 3000
+
+config:
+  data:
+    BROKER_URL: kafka:9092
+    KAFKA_TOPIC: email-queue
+
+secret:
+  stringData:
+    EMAIL_HOST: "smtp.ethereal.email"
+    EMAIL_PORT: "587"
+    EMAIL_AUTH_USER: "jed.luettgen69@ethereal.email"
+    EMAIL_USER_TITLE: "Kacjy 72"
+    EMAIL_AUTH_PASS: "PwKWNbwRs9BFw1g22v"
