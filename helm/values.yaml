@@ -6,4 +6,6 @@ kafka:
     enabled: true # при запуску будуть створені перелічені топіки
     topics:
       - name: email-queue
-      - name: tasks
+      - name: task-updates
+  persistence:
+    enabled: false

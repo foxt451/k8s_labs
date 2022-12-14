@@ -25,6 +25,19 @@ export class TaskNotificationsService {
     private emailResolutionService: EmailResolutionService,
   ) {
     this.scheduler.defineAction<TaskTopicItem>(async (task) => {
+      this.logger.log('Processing task notificationd delayed job...');
+      let email;
+      try {
+        email = await this.emailResolutionService.resolveEmailByUID(
+          task.task.userId,
+        );
+      } catch (e: any) {
+        this.logger.error(e.name, e.message);
+        throw e;
+      }
+      this.logger.log(
+        `Preparing to push notification to message broker (task id: ${task.task.id}; email ${email}; topic: ${this.kafkaConfig.emailQueueTopic})`,
+      );
       this.kafkaClient.emit<
         never,
         SendEventPayload<PRESET.TASK_DEADLINE_COMING>
@@ -50,6 +63,9 @@ export class TaskNotificationsService {
         SCHEDULE_NAME.DEADLINE_NOTIFICATION,
         `task_${payload.task.id}`,
       );
+    }
+    if (payload.op === TaskOp.DELETED) {
+      return;
     }
     this.logger.log(
       `Scheduling a deadline email for task with id: ${payload.task.id}`,

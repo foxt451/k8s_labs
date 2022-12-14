@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 postgresql:
-  fullnameOverride: postgres-auth
+  nameOverride: postgres-auth
   postgresqlDatabase: "users"
   postgresqlUsername: "demo"
   postgresqlPassword: "demo"
@@ -37,7 +37,7 @@ ingress:
 
 secret:
   stringData:
-    USER_DB_URL: "postgresql://demo:demo@postgres-auth:5432/users?sslmode=disable"
+    USER_DB_URL: "postgresql://demo:demo@todos-postgres-auth:5432/users?sslmode=disable"
     PUBLIC_KEY: |
       -----BEGIN PUBLIC KEY-----
       MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBsMLYcPI7LpJvUt34Jl83aGH18lN
